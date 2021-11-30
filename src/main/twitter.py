@@ -11,7 +11,7 @@ delim = ", "
 
 ##  To set tokens as environment variables, type in console:
 ##      export 'TOKEN_NAME'='TOKEN_VALUE'
-##  replacing TOKEN_NAME and TOKEN_VALUE with respective values
+##  replacing TOKEN_NAME and TOKEN_VALUE with respective values 
 
 api_key = os.environ.get('API_KEY')
 api_secret_key = os.environ.get('API_SECRET_KEY')
