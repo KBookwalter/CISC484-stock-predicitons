@@ -28,17 +28,18 @@ search_word = "nhl"
 
 date_since = "2021-10-29"
 
-num_tweets = 100
+num_tweets = 10
 
-tweets = tw.Cursor(api.search_tweets, q=search_word, lang="en", since_id=date_since).items(num_tweets)
+cursor = tw.Cursor(api.search_tweets, q=search_word, lang="en", since_id=date_since, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+tweets = cursor.items(num_tweets)
 
 sum = 0
 
 for tweet in tweets:
     scores = sia.polarity_scores(tweet.text)
-    print(tweet.text)
-    print(scores)
-    print("\n")
+    # print(tweet.text)
+    # print(scores)
+    # print("\n")
     sum += scores["compound"]
 
 print("Average Compound Score: ", sum/num_tweets)
