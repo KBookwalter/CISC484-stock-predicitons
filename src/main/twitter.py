@@ -1,4 +1,5 @@
 import os
+import datetime
 from os import wait
 from TwitterAPI import TwitterAPI
 import tweepy as tw
@@ -12,7 +13,6 @@ delim = ", "
 ##  To set tokens as environment variables, type in console:
 ##      export 'TOKEN_NAME'='TOKEN_VALUE'
 ##  replacing TOKEN_NAME and TOKEN_VALUE with respective values 
-
 api_key = os.environ.get('API_KEY')
 api_secret_key = os.environ.get('API_SECRET_KEY')
 bearer_token = os.environ.get('BEARER_TOKEN')
@@ -26,24 +26,39 @@ api = tw.API(auth, wait_on_rate_limit=True)
 
 search_word = "nhl"
 
-date_since = "2021-10-29"
+date_since = datetime.date(2021, 11, 26)
+num_days = 1
 
-num_tweets = 10
+num_tweets = 2
 
-cursor = tw.Cursor(api.search_tweets, q=search_word, lang="en", since_id=date_since, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-tweets = cursor.items(num_tweets)
+def get_tweets(date):
+    print(date)
+    cursor = tw.Cursor(api.search_tweets, q=search_word, lang='en', since_id=date_since, count = num_tweets)
+    tweets = cursor.items(num_tweets)
+    return tweets
 
-sum = 0
+def get_sentiment(tweets):
+    sum = 0
+    for tweet in tweets:
+        scores = sia.polarity_scores(tweet.text)1
+        sum += scores["compound"]
+    return sum / num_tweets
 
-for tweet in tweets:
-    scores = sia.polarity_scores(tweet.text)
-    # print(tweet.text)
-    # print(scores)
-    # print("\n")
-    sum += scores["compound"]
+date_list = [date_since + datetime.timedelta(days=x) for x in range(num_days)]
 
-print("Average Compound Score: ", sum/num_tweets)
+sents = []
+for date in date_list:
+    tweets = get_tweets(date)
+    # sent = get_sentiment(tweets)
+    # sents.append({"date": date, "sentiment": sent})
+    for tweet in tweets:
+        print(tweet.text)
 
+for sent in sents:
+    print(sent)
+
+# for date in date_list:
+#     print(date)
 
 # out_file = open("twitter_sentiment.csv", "w", encoding="utf-8")
 # out_file.write("")
