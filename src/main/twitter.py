@@ -27,9 +27,10 @@ api = tw.API(auth, wait_on_rate_limit=True)
 search_word = "nhl"
 
 date_since = datetime.date(2021, 11, 26)
+date_until = datetime.date(2021, 1, 27)
 num_days = 1
 
-num_tweets = 2
+num_tweets = 1
 
 def get_tweets(date):
     print(date)
@@ -40,7 +41,7 @@ def get_tweets(date):
 def get_sentiment(tweets):
     sum = 0
     for tweet in tweets:
-        scores = sia.polarity_scores(tweet.text)1
+        scores = sia.polarity_scores(tweet.text)
         sum += scores["compound"]
     return sum / num_tweets
 
@@ -53,6 +54,7 @@ for date in date_list:
     # sents.append({"date": date, "sentiment": sent})
     for tweet in tweets:
         print(tweet.text)
+        print(tweet.created_at)
 
 for sent in sents:
     print(sent)
