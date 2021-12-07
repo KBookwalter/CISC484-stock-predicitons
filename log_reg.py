@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy import optimize
 
 train_size = 124
 test_size = 32
@@ -33,12 +34,12 @@ def gradient_descent(X, y, theta, alpha, num_iters):
 					theta[j] -= (alpha/m)*np.sum(h-y[i])
 				else: 
 					theta[j] -= (alpha/m)*np.sum(h-y[i])*X[i][j]
-		J_history.append(lr_cost(X, y, theta))
+		J_history.append(lr_cost(theta, X, y))
 	return theta, J_history
 
 
 
-def lr_cost(X, y, theta):
+def lr_cost(theta, X, y):
     m = y.size  # number of training examples
 
     # You need to return the following variables correctly 
@@ -78,8 +79,14 @@ increase = np.array(X[:,0] > X[:,1], dtype=int)
 y = increase
 X = np.delete(X, 0, axis=1)
 
+X = np.delete(X, len(X[0])-2, axis=1)
+X = np.delete(X, len(X[0])-2, axis=1)
+X = np.delete(X, len(X[0])-2, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
+
+
 alpha = 0.1
-num_iters = 20
+num_iters = 2
 theta = np.zeros(len(X[0])+1)
 
 X = feature_normalize(X)
@@ -97,20 +104,16 @@ X = X[:train_size]
 y = y[:train_size]
 m = len(y)
 
-theta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
+#heta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
 # plt.plot(np.arange(len(J_history)), J_history, lw=2)
 # plt.xlabel("number of iterations")
 # plt.ylabel("Cost J")
 # #plt.show()
 
-# print("X_test@theta")
-# print(X_test@theta)
-# print("y_test")
-# print(y_test)
-# MSE = np.square(np.subtract(y_test, predictions)).mean()
-# print(MSE)
-# print(X_test.shape)
-# print(theta.shape)
+options = {'maxiter': 10}
+res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
 
-predictions = predict(theta, X)
-print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y) * 100))
+# print(theta)
+predictions = predict(res.x, X_test)
+print(predictions)
+print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y_test) * 100))
