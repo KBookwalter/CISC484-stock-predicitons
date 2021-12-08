@@ -101,7 +101,7 @@ def cross_validate(X, y, n):
 
 
 X = pd.read_csv(path_to_data, sep=",").to_numpy()
-# np.random.shuffle(X)
+np.random.shuffle(X)
 # X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
 # y = X[:,0]
 
@@ -134,12 +134,12 @@ X = feature_normalize(X)
 
 X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
 
-# X_test = X[train_size:]
-# y_test = y[train_size:]
+X_test = X[train_size:]
+y_test = y[train_size:]
 
-# X = X[:train_size]
-# y = y[:train_size]
-# m = len(y)
+X = X[:train_size]
+y = y[:train_size]
+m = len(y)
 
 # theta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
 # plt.plot(np.arange(len(J_history)), J_history, lw=2)
@@ -147,11 +147,11 @@ X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
 # plt.ylabel("Cost J")
 # #plt.show()
 
-# options = {'maxiter': 100}
-# res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
+options = {'maxiter': 100}
+res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
 
-print(cross_validate(X, y, 10))
+# print(cross_validate(X, y, 10))
 
-# predictions = predict(res.x, X_test)
-# print(predictions)
-# print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y_test) * 100))
+predictions = predict(res.x, X_test)
+print(predictions)
+print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y_test)))
