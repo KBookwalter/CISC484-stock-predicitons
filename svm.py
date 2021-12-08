@@ -25,9 +25,15 @@ X = np.delete(X, 0, axis=1)
 
 #X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
 
+# Just Compound Sentiment
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
+
+# Remove all sentiment
+# X = np.delete(X, len(X[0])-1, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
 # X = np.delete(X, len(X[0])-1, axis=1)
 
 X = feature_normalize(X)
@@ -57,4 +63,5 @@ model = svm.SVC(C=1000)
 #print(model.support_vectors_)
 
 scores = cross_val_score(model, X, y, cv=10)
+print(scores)
 print(scores.mean())

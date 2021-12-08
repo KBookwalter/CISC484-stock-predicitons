@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import optimize
+from sklearn.model_selection import cross_val_score
 
 train_size = 124
 test_size = 32
@@ -70,6 +71,35 @@ def predict(theta, X):
             p[i] = 1
     return p
 
+def cross_validate(X, y, n):
+    options = {'maxiter': 100}
+    #res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
+    scores = []
+    X_folds = np.array_split(X, n)
+    y_folds = np.array_split(y, n)
+
+    for i in range(n):
+        
+        test_X = X_folds[i]
+        test_y = y_folds[i]
+        training_X = X_folds.copy()
+        training_y = y_folds.copy()
+        training_X.pop(i)
+        training_y.pop(i)
+        training_X = np.concatenate(training_X)
+        training_y = np.concatenate(training_y)
+
+        theta = np.zeros(len(training_X[0]))
+        res = optimize.minimize(lr_cost, theta, (training_X, training_y), jac=True, method='TNC', options=options)
+        predictions = predict(res.x, test_X)
+        accuracy = np.mean(predictions == test_y)
+        scores.append(accuracy)
+
+    print(scores)
+    return(np.mean(accuracy))
+
+
+
 X = pd.read_csv(path_to_data, sep=",").to_numpy()
 # np.random.shuffle(X)
 # X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
@@ -80,12 +110,12 @@ increase = np.array(X[:,0] > X[:,1], dtype=int)
 y = increase
 X = np.delete(X, 0, axis=1)
 
-# Remove sentiment data
+# Just compound sentiment
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
-# X = np.delete(X, len(X[0])-1, axis=1)
 
+# Remove all sentiment
 # X = np.delete(X, len(X[0])-1, axis=1)
 # X = np.delete(X, len(X[0])-1, axis=1)
 # X = np.delete(X, len(X[0])-1, axis=1)
@@ -101,30 +131,27 @@ num_iters = 2
 theta = np.zeros(len(X[0])+1)
 
 X = feature_normalize(X)
-# y = feature_normalize(y)
 
 X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
-# print(X.shape)
-# print(increase.shape)
-# X = np.concatenate([X, increase], axis=1)
 
-X_test = X[train_size:]
-y_test = y[train_size:]
+# X_test = X[train_size:]
+# y_test = y[train_size:]
 
-X = X[:train_size]
-y = y[:train_size]
-m = len(y)
+# X = X[:train_size]
+# y = y[:train_size]
+# m = len(y)
 
-#heta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
+# theta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
 # plt.plot(np.arange(len(J_history)), J_history, lw=2)
 # plt.xlabel("number of iterations")
 # plt.ylabel("Cost J")
 # #plt.show()
 
-options = {'maxiter': 100}
-res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
+# options = {'maxiter': 100}
+# res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
 
-# print(theta)
-predictions = predict(res.x, X_test)
-print(predictions)
-print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y_test) * 100))
+print(cross_validate(X, y, 10))
+
+# predictions = predict(res.x, X_test)
+# print(predictions)
+# print('Train Accuracy: {:.2f} %'.format(np.mean(predictions == y_test) * 100))
