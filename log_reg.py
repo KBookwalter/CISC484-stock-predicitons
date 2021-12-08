@@ -26,7 +26,7 @@ def compute_cost(X, y, theta):
 def gradient_descent(X, y, theta, alpha, num_iters):
 	theta = theta.copy()
 	J_history = []
-	for it in range(num_iters):
+	for i in range(num_iters):
 		for i in range(m):
 			h = theta@X[i]
 			for j in range(theta.shape[0]):
@@ -71,6 +71,7 @@ def predict(theta, X):
     return p
 
 X = pd.read_csv(path_to_data, sep=",").to_numpy()
+# np.random.shuffle(X)
 # X = np.concatenate([np.ones((len(X), 1)), X], axis=1)
 # y = X[:,0]
 
@@ -79,10 +80,20 @@ increase = np.array(X[:,0] > X[:,1], dtype=int)
 y = increase
 X = np.delete(X, 0, axis=1)
 
+# Remove sentiment data
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
 X = np.delete(X, len(X[0])-2, axis=1)
 # X = np.delete(X, len(X[0])-1, axis=1)
+
+# X = np.delete(X, len(X[0])-1, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
+# X = np.delete(X, len(X[0])-1, axis=1)
+
+
+# Remove high value
+#X = np.delete(X, 1, axis=1)
 
 
 alpha = 0.1
@@ -110,7 +121,7 @@ m = len(y)
 # plt.ylabel("Cost J")
 # #plt.show()
 
-options = {'maxiter': 10}
+options = {'maxiter': 100}
 res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
 
 # print(theta)
