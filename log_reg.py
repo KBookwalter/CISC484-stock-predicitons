@@ -141,16 +141,9 @@ X = X[:train_size]
 y = y[:train_size]
 m = len(y)
 
-# theta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
-# plt.plot(np.arange(len(J_history)), J_history, lw=2)
-# plt.xlabel("number of iterations")
-# plt.ylabel("Cost J")
-# #plt.show()
-
 options = {'maxiter': 100}
 res = optimize.minimize(lr_cost, theta, (X, y), jac=True, method='TNC', options=options)
 
-# print(cross_validate(X, y, 10))
 
 predictions = predict(res.x, X_test)
 print(predictions)

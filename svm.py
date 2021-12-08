@@ -60,8 +60,3 @@ for i in range(len(pred)):
 accuracy = correct / len(X_test)
 
 print(accuracy)
-#print(model.support_vectors_)
-
-# scores = cross_val_score(model, X, y, cv=10)
-# print(scores)
-# print(scores.mean())

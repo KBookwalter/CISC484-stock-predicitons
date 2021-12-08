@@ -8,8 +8,8 @@ import csv
 
 ALPACA_BASE_URL = "https://paper-api.alpaca.markets"
 
-ACCESS_KEY = "access"
-SECRET_KEY = "secret"
+ACCESS_KEY = "AKMPZZHOCXIIMX604N7T"
+SECRET_KEY = "z4O9LNGbQNTpmRVAgGZX644pClj4jiKehUQiq0oD"
 
 TICKER = 'AAPL'
 
@@ -24,7 +24,6 @@ with open('{}_data_file.csv'.format(TICKER.lower()), mode='w') as data_file:
 	barset = api.get_barset(TICKER, '1D', start=start.isoformat(), end=end.isoformat(), limit=1000)
 	tickerwriter = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	for item in barset[TICKER]:
-		#counter += 1
 		tickerwriter.writerow([item.o, item.c, item.h, item.l, item.v])
 		#print(counter)	
 		
